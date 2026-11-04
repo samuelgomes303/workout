@@ -1,0 +1,61 @@
+package com.example.workoutproject.authentication;
+
+
+import com.example.workoutproject.dto.AuthenticationRequest;
+import com.example.workoutproject.dto.AuthenticationResponse;
+import com.example.workoutproject.dto.RegisterRequest;
+import com.example.workoutproject.entity.User;
+import com.example.workoutproject.respository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+
+    // metodo de login
+    public AuthenticationResponse authenticate(AuthenticationRequest request){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+        var user = userRepository.findByUsername(request.getUsername());
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+
+    // metodo de registo
+    public AuthenticationResponse register(RegisterRequest request) {
+
+        if(userRepository.existsByUsername(request.getUsername())){
+            throw new IllegalArgumentException("User already exists");
+        }
+
+        var user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
+
+        userRepository.save(user);
+
+        String jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
+
+}
