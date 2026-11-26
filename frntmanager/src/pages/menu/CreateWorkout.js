@@ -111,7 +111,6 @@ const CreateWorkout = () => {
         },
         body: JSON.stringify({
           name: formData.name,
-          date: formData.date,
           description: formData.description,
           exercises: exercises.map(
             ({ exercise_id, sets, repetitions, weigth }, index) => ({
@@ -171,17 +170,6 @@ const CreateWorkout = () => {
                 name="name"
                 placeholder="Ex.: Treino de força"
                 value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
-
-            <Form.Group controlId="workoutDate">
-              <Form.Label>Data e hora</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                name="date"
-                value={formData.date}
                 onChange={handleInputChange}
                 required
               />

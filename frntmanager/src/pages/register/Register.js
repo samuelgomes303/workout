@@ -47,7 +47,7 @@ function Register() {
     return(
         <>
             <div className='center-form'>
-                <h1> Registo de cliente</h1>
+                <h1> Registo de utilizador</h1>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId='formBasicName'>
                         <FormControl

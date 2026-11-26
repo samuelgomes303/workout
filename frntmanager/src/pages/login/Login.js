@@ -43,7 +43,7 @@ function Login() {
     return(
         <>
             <div className='center-form'>
-                <h1> Login do utilizador</h1>
+                <h1> Autenticar utilizador</h1>
                 <Form onSubmit={handleSubmit}>
 
                     <Form.Group controlId='formBasicName'>
